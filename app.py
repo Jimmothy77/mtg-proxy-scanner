@@ -7,7 +7,7 @@ import re  # <--- NEW: Add this to the top of your file!
 
 # ... [Keep your page config and camera setup the same] ...
 
-  # Run Tesseract OCR
+# Run Tesseract OCR
   raw_text = pytesseract.image_to_string(gray).strip()
   
   st.info(f"🔍 Raw Text Detected: '{raw_text}'")
