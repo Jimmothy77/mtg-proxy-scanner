@@ -3,35 +3,32 @@ import numpy as np
 import pytesseract
 import requests
 import streamlit as st
+import re  # <--- NEW: Add this to the top of your file!
 
-st.set_page_config(page_title="Proxy MTG Scanner", layout="centered")
-st.title("🎴 MTG Proxy Scanner")
-
-# Initialize session state for deck storage
-if "decklist" not in st.session_state:
-  st.session_state.decklist = []
-
-# Camera input for mobile browsers
-picture = st.camera_input("Take a photo of the card")
-
-if picture:
-  # Read image bytes
-  bytes_data = picture.getvalue()
-  nparr = np.frombuffer(bytes_data, np.uint8)
-  img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-  # Crop top ~15% (Card Title Area)
-  h, w, _ = img.shape
-  header = img[0 : int(h * 0.15), 0:w]
-  
-  # --- NEW DEBUG VISUAL ---
-  st.image(header, caption="What the OCR scanner sees (Check for glare!)")
-
-  # Preprocessing for cleaner OCR text extraction
-  gray = cv2.cvtColor(header, cv2.COLOR_BGR2GRAY)
+# ... [Keep your page config and camera setup the same] ...
 
   # Run Tesseract OCR
-  extracted_text = pytesseract.image_to_string(gray).strip()
+  raw_text = pytesseract.image_to_string(gray).strip()
+  
+  st.info(f"🔍 Raw Text Detected: '{raw_text}'")
+
+  if raw_text:
+    # --- NEW TEXT CLEANUP BLOCK ---
+    # Strip out all numbers, punctuation, and weird symbols (keep only letters and spaces)
+    clean_text = re.sub(r'[^a-zA-Z\s]', '', raw_text)
+    
+    # Grab just the first 3 valid words to send to Scryfall
+    search_query = " ".join(clean_text.split()[:3])
+    
+    st.info(f"✨ Cleaned Query for Scryfall: '{search_query}'")
+
+    # Query Scryfall Fuzzy API using the cleaned query
+    res = requests.get(
+        f"https://api.scryfall.com/cards/named?fuzzy={search_query}",
+        headers={"User-Agent": "MTGProxyScanner/1.0"},
+    )
+    
+    # ... [Keep the rest of your success/error code exactly the same] ...
   
   # --- NEW DEBUG TEXT ---
   st.info(f"🔍 Raw Text Detected: '{extracted_text}'")
