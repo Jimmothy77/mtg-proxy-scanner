@@ -28,7 +28,7 @@ import re  # <--- NEW: Add this to the top of your file!
         headers={"User-Agent": "MTGProxyScanner/1.0"},
     )
     
-    # ... [Keep the rest of your success/error code exactly the same] ...
+  # ... [Keep the rest of your success/error code exactly the same] ...
   
   # --- NEW DEBUG TEXT ---
   st.info(f"🔍 Raw Text Detected: '{extracted_text}'")
