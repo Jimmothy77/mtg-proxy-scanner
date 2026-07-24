@@ -23,18 +23,28 @@ if picture:
   # Crop top ~15% (Card Title Area)
   h, w, _ = img.shape
   header = img[0 : int(h * 0.15), 0:w]
+  
+  # --- NEW DEBUG VISUAL ---
+  st.image(header, caption="What the OCR scanner sees (Check for glare!)")
 
   # Preprocessing for cleaner OCR text extraction
   gray = cv2.cvtColor(header, cv2.COLOR_BGR2GRAY)
 
   # Run Tesseract OCR
   extracted_text = pytesseract.image_to_string(gray).strip()
+  
+  # --- NEW DEBUG TEXT ---
+  st.info(f"🔍 Raw Text Detected: '{extracted_text}'")
 
   if extracted_text:
     # Query Scryfall Fuzzy API
     res = requests.get(
         f"https://api.scryfall.com/cards/named?fuzzy={extracted_text}",
         headers={"User-Agent": "MTGProxyScanner/1.0"},
+    )
+    # ... (Keep the rest of your API matching code the same)
+  else:
+    st.warning("No text detected. Try adjusting the lighting to reduce glare!")
     )
 
     if res.status_code == 200:
