@@ -45,7 +45,7 @@ if picture:
     # ... (Keep the rest of your API matching code the same)
   else:
     st.warning("No text detected. Try adjusting the lighting to reduce glare!")
-    )
+    
 
     if res.status_code == 200:
       card = res.json()
