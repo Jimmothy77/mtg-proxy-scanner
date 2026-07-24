@@ -54,7 +54,12 @@ if picture:
     else:
       st.error(f"Couldn't match card text: '{extracted_text}'")
 
----
+# Use this if you want a visual line in the app!
+st.divider()
+
+# Display Active Decklist
+st.subheader("📋 Current Decklist")
+if st.session_state.decklist:
 
 # Display Active Decklist
 st.subheader("📋 Current Decklist")
